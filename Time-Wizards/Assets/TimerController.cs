@@ -8,9 +8,12 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour
 { 
-    [SerializeField] float totalTime = 300f; // 5 Minutes
+    // TODO:
+    // Countdown will not print properly due to reducing before it sets the timer default ??????
 
-    Text countdownTimer;
+    [SerializeField] int totalTime = 300; // 5 Minutes
+    [SerializeField] TimerController countdownTimer;
+    Text TimerLabel;
 
     // timer needs to go down and up
     // timer needs a base time to go down from
@@ -18,26 +21,57 @@ public class TimerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        countdownTimer = GetComponent<Text>();
+        TimerLabel = FindObjectOfType<Text>();
+        SetTimerLabelText();
         StartCoroutine(Countdown());
-        for (int i = 0; i < 1000000000; i++) {
-            print("poop");
-        }
     }
 
     IEnumerator Countdown()
-    {        
-        while (totalTime >= 0)
+    {
+        while (totalTime > 0)
         {
-            totalTime--;
-            countdownTimer.text = "Time: " + totalTime;
             yield return new WaitForSeconds(1);
+            totalTime--;
+            SetTimerLabelText();
         }
     }
 
-    int GetMinutes(int totalTime)
+    private void SetTimerLabelText()
     {
+        TimerLabel.text = GetTimerFormatted(totalTime);
+    }
 
-        return 0;
+    string GetTimerFormatted(int totalTime)
+    {
+        string timerText = string.Empty;
+
+        TimerStructure timeConverted = GetTimeConverted(totalTime);
+
+        timerText = "Time: " 
+            + timeConverted.Minutes.ToString().PadLeft(2, '0') 
+            + ":" 
+            + timeConverted.Seconds.ToString().PadLeft(2, '0');
+
+        return timerText;
+    }
+
+    TimerStructure GetTimeConverted(int totalTime)
+    {
+        int minutes = totalTime / 60;
+        int seconds = totalTime % 60;
+
+        TimerStructure timerStructure = new TimerStructure(minutes, seconds);
+
+        return timerStructure;
+    }
+
+    public void AddTime(int time)
+    {
+        totalTime += time;
+    }
+
+    public void RemoveTime(int time)
+    {
+        totalTime -= time;
     }
 }
