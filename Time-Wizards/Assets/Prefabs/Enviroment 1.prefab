@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7910406396103652107}
   m_Layer: 0
   m_Name: Enviroment 1
-  m_TagString: Untagged
+  m_TagString: Enviroment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,7 +117,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7910406396866154031}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 936877e8b745a934b909483d0336f4bb, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
