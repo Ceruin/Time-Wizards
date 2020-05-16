@@ -4,23 +4,42 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 6.0f;
+    [SerializeField] CharacterController controller;
 
-    private Vector3 moveDirection = Vector3.zero;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] float groundDistance = 0.4f;
+    [SerializeField] LayerMask groundMask;
 
-    void Start()
-    {
-      
-    }
+    [SerializeField] float jumpHeight = 3f;
+    [SerializeField] float moveSpeed = 12.0f;
+    [SerializeField] float gravity = -9.81f;
+
+    Vector3 velocity;
+    bool isGrounded;
 
     void Update()
     {
-        // move direction directly from axes
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-        moveDirection *= moveSpeed;
-        transform.TransformDirection(moveDirection);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        // Move the controller
-        transform.position += moveDirection * Time.deltaTime;
+        if (isGrounded && velocity.y <= 0)
+        {
+            velocity.y = -2f;
+        }
+
+        float xMovement = Input.GetAxis("Horizontal");
+        float zMovement = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = transform.right * xMovement + transform.forward * zMovement;
+
+        controller.Move(moveDirection * moveSpeed * Time.deltaTime);
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
     }
 }
