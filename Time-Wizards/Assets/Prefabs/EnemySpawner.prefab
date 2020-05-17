@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secondTillSpawn: 1
+  spawnSizeMultiplier: 5
   spawnCap: 150
   enemyCube: {fileID: 3559211096502748368, guid: 371f4df4fa13a08478945b6f541a99f6,
     type: 3}

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -14,12 +15,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed = 12.0f;
     [SerializeField] float gravity = -9.81f;
 
+    public float currentSpeed = 0;
+    float acceleration = 0.05f;
+    int maxSpeed = 10;
+    float bHopTime = 400f;
+
     Vector3 velocity;
     bool isGrounded;
+
+    Stopwatch timer = new Stopwatch();
 
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if(isGrounded)
+        {
+            timer.Start();
+        } else
+        {
+            timer.Stop();
+            timer.Reset();
+        }
+
 
         if (isGrounded && velocity.y <= 0)
         {
@@ -40,6 +58,28 @@ public class PlayerController : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
 
+        if (!isGrounded)
+        {
+            velocity.x += moveDirection.x * acceleration; // velocity buildup on the horizontal axis
+            velocity.z += moveDirection.z * acceleration; // velocity buildup on the vertical axis
+        }
+        else
+        {
+            if (timer.ElapsedMilliseconds > bHopTime)
+            {
+                velocity.x = 0;
+                velocity.z = 0;
+            }
+        }
+
+        velocity = Vector3.ClampMagnitude(velocity, maxSpeed); // clamp the speed so the character doesn't accelerate forever
+
+        currentSpeed = velocity.x;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+
     }
 }
