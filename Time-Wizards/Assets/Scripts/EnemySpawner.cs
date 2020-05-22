@@ -49,7 +49,8 @@ public class EnemySpawner : MonoBehaviour
 
         gameObject.transform.localScale = gameObject.transform.localScale * spawnSizeMultiplier;
 
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.up * Random.Range(minForceToCube, maxForceToCube), ForceMode.Impulse);
+        Transform rb = gameObject.GetComponent<Transform>();
+        rb.TransformDirection(Vector3.up * 20);
+        //rb.AddForce(Vector3.up * Random.Range(minForceToCube, maxForceToCube), ForceMode.Impulse);
     }
 }

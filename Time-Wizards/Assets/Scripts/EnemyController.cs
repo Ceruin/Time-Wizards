@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class EnemyController : Enemy
 {
-    float shrinkSizeAmount = 0.999f;
-    int timeTillShrink = 10;
+    int timeTillDeath = 2;
     Transform enemyTransform;
 
     Stopwatch timer = new Stopwatch();
@@ -19,17 +18,10 @@ public class EnemyController : Enemy
 
     void Update()
     {
-        if (enemyTransform.localScale.x > 0.2)
-        {
-            if (timer.Elapsed.Milliseconds > timeTillShrink)
+            if (timer.Elapsed.Seconds > timeTillDeath)
             {
-                timer.Restart();
-                enemyTransform.localScale = Vector3.Scale(enemyTransform.localScale, new Vector3(shrinkSizeAmount, shrinkSizeAmount, shrinkSizeAmount));
+                timer.Stop();
+                Destroy(gameObject);
             }
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
     }
 }
