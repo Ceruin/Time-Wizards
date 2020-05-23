@@ -14,13 +14,6 @@ struct Cmd
 
 public class PlayerController : MonoBehaviour
 {
-    /*
-    public Transform playerView;     // Camera
-    public float playerViewYOffset = 0.6f; // The height at which the camera is bound to
-    public float xMouseSensitivity = 30.0f;
-    public float yMouseSensitivity = 30.0f;
-    */
-    //
     /*Frame occuring factors*/
     public float gravity = 20.0f;
 
@@ -69,30 +62,31 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        /*
-        // Hide the cursor
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-
-        if (playerView == null)
-        {
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-                playerView = mainCamera.gameObject.transform;
-        }
-
-        // Put the camera inside the capsule collider
-        playerView.position = new Vector3(
-            transform.position.x,
-            transform.position.y + playerViewYOffset,
-            transform.position.z);
-            */
-
         _controller = GetComponent<CharacterController>();
     }
 
     private void Update()
+    {
+        ProcessMovement();
+        if (Input.GetButtonDown("Fire"))
+        {
+            var poop = FindObjectsOfType<Enemy>();
+
+            foreach(var test in poop)
+            {
+                Rigidbody rb = test.GetComponent<Rigidbody>();
+                rb.constraints = RigidbodyConstraints.FreezePosition;
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        DeathZone test = other.GetComponent<DeathZone>();
+        test.TeleportPlayer(_controller);
+    }
+
+    private void ProcessMovement()
     {
         // Do FPS calculation
         frameCount++;
@@ -103,30 +97,6 @@ public class PlayerController : MonoBehaviour
             frameCount = 0;
             dt -= 1.0f / fpsDisplayRate;
         }
-
-        /*
-        // Ensure that the cursor is locked into the screen 
-        if (Cursor.lockState != CursorLockMode.Locked)
-        {
-            if (Input.GetButtonDown("Fire1"))
-                Cursor.lockState = CursorLockMode.Locked;
-        }
-        
-
-        // Camera rotation stuff, mouse controls this shit 
-        rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity * 0.02f;
-        rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity * 0.02f;
-
-        // Clamp the X rotation
-        if (rotX < -90)
-            rotX = -90;
-        else if (rotX > 90)
-            rotX = 90;
-
-        this.transform.rotation = Quaternion.Euler(0, rotY, 0); // Rotates the collider
-        playerView.rotation = Quaternion.Euler(rotX, rotY, 0); // Rotates the camera
-        */
-
 
         /* Movement, here's the important part */
         QueueJump();
@@ -143,15 +113,6 @@ public class PlayerController : MonoBehaviour
         udp.y = 0.0f;
         if (udp.magnitude > playerTopVelocity)
             playerTopVelocity = udp.magnitude;
-
-        /*
-        //Need to move the camera after the player has been moved because otherwise the camera will clip the player if going fast enough and will always be 1 frame behind.
-        // Set the camera's position to the transform
-        playerView.position = new Vector3(
-            transform.position.x,
-            transform.position.y + playerViewYOffset,
-            transform.position.z);
-            */
     }
 
     /*******************************************************************************************************\

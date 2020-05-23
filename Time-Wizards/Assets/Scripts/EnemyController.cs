@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyController : Enemy
 {
-    int timeTillDeath = 2;
+    [SerializeField] int timeTillDeath = 2;
     Transform enemyTransform;
 
     Stopwatch timer = new Stopwatch();
