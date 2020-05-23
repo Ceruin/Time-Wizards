@@ -67,15 +67,37 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
         ProcessMovement();
+        FreezeObjects();
+    }
+
+    private void FreezeObjects()
+    {
         if (Input.GetButtonDown("Fire"))
         {
             var poop = FindObjectsOfType<Enemy>();
 
-            foreach(var test in poop)
+            foreach (var test in poop)
             {
                 Rigidbody rb = test.GetComponent<Rigidbody>();
-                rb.constraints = RigidbodyConstraints.FreezePosition;
+                var test23 = Vector3.Distance(rb.transform.position, _controller.transform.position);
+                if (test23 < 35)
+                {
+                    rb.constraints = RigidbodyConstraints.FreezePosition;
+                }
             }
         }
     }

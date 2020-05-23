@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    [SerializeField] float mouseSens = 100f;
+    [SerializeField] public float mouseSens = 100f;
     [SerializeField] Transform playerBody;
 
     float xRotation = 0f;
@@ -13,6 +13,7 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
